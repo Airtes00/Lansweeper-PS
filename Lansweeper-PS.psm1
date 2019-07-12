@@ -262,11 +262,9 @@ lansweeperdb.dbo.tblAssetCustom, lansweeperdb.dbo.tblScanHistory, lansweeperdb.d
         $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "TermalState" -Value ($ComputerSystemTable_Properties).ThermalState
         $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "TotalPhysicalMemory" -Value ($ComputerSystemTable_Properties).TotalPhysicalMemory
 
-        #The below properties (Last logon time, userdomain, and user) are represented as arrays in the SQL database. 
-        #The first value in the array is the most recent addition and is assigned as the property.
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogonTime" -Value ($CPLogonInfoTable_Properties).logontime[0]
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastUserLogonDomain" -Value ($CPLogonInfoTable_Properties).Domain[0]
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogon" -Value ($CPLogonInfoTable_Properties).Username[0]
+        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogonTime" -Value ($CPLogonInfoTable_Properties).logontime
+        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastUserLogonDomain" -Value ($CPLogonInfoTable_Properties).Domain
+        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogon" -Value ($CPLogonInfoTable_Properties).Username
 
         $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DefaultIPGateway" -Value ($NetworkTable_Properties).DefaultIPGateway
         $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NetworkConfigDescription" -Value ($NetworkTable_Properties).Description
