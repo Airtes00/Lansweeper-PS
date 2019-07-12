@@ -2,6 +2,10 @@
 Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes without knowing SQL.
 https://github.com/sqlcollaborative/dbatools
 
+# Install
+Lansweeper-PS is published on the PSGallery (current version 1.23) and can be installed with Install-Module Lansweeper-PS
+https://www.powershellgallery.com/packages/Lansweeper-PS/
+
 # A Note
 This module is the result of much learning by myself, a student. As such, expect the modules to grow and mature over time after their initial release. I am excited to see if the open-source community latches onto this idea, and where other people might take it. On the flip side of this coin it is a work in progress and is subject to bugs/changes. For example, while the Get-LSComputerObject functions just fine, the object properties are returned in a not-so-neat order. This does not affect functionality, but could be more visually appealing.
 
