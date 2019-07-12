@@ -16,7 +16,11 @@ This tool has several dependencies/pre-requisites that need to be met in order t
 
 # To do
 -Add support for CompactSQL databases
+
 -Integrate DbaQuery function into this module in order to remove dbatools as a dependency
+
 -Add more functions as the community dictates. Currently the main functions deal with computer assets and user accounts. Support can be added for AWS, Azure, Linux devices, Mac devices, and Networking devices with minimal effort.
+
 -Add support for wildcards when using parameters to search for assets in the LS database. Powershell and SQL handle wildcards differently, and currently adding support for them would be lengthy with my current skillset.
+
 -Beautify code
