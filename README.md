@@ -1,5 +1,5 @@
 # Lansweeper-PS
-Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes without knowing SQL.
+Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes...without knowing SQL.
 https://github.com/sqlcollaborative/dbatools
 
 # Install
