@@ -215,9 +215,7 @@ function Get-LSComputerObject
 
         #AssetID is assigned for use in the rest of the queries.
         $AssetID = $AssetsTable.AssetID
-
-        $SQLQuery = Get-Content .\LSQuery.sql
-        $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File .\LSQuery.sql -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+        $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
 
         $WholeComputerObject
       
