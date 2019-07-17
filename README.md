@@ -1,5 +1,7 @@
 # Lansweeper-PS
-Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes...without knowing SQL.
+Provides functionality to load asset information in Powershell from the Lansweeper database.
+
+SQL queries are accomplished with dbatools to interact with the SQL server.
 https://github.com/sqlcollaborative/dbatools
 
 [Check out my LinkedIn!](https://www.linkedin.com/in/marcus-dean/)
