@@ -12,7 +12,7 @@
 RootModule = 'Lansweeper-PS.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.27.4'
+ModuleVersion = '1.27.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -110,6 +110,7 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = 'Added functions and made a major overhaul of the Get-LSComputerObject function
+                        -Version 1.27.5: Added support for AssetID parameter in the Get-LSComputerObject function
                         -Version 1.27.4: Fixed sourcing of query file and added tags for PSGallery
                        '
 

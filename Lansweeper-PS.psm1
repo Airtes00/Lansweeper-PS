@@ -206,18 +206,32 @@ function Get-LSComputerObject
     #AssetID is used as a universal identifier across tables, even those that do not track AssetName.
     param
         (
-        [parameter(Mandatory=$true) ]$AssetName,
+        [parameter(Mandatory=$false) ]$AssetID,
+        [parameter(Mandatory=$false) ]$AssetName,
         [parameter(Mandatory=$true) ]$SQLInstance,
         [parameter(Mandatory=$false)]$Credentials
         )
 
-        $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
+            {
+                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
 
-        #AssetID is assigned for use in the rest of the queries.
-        $AssetID = $AssetsTable.AssetID
-        $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+                #MyAssetID is assigned for use in the rest of the queries.
+                $MyAssetID = $AssetsTable.AssetID
+                $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+                $WholeComputerObject
+                break
+            }
 
-        $WholeComputerObject
+            elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
+            {
+            $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+            $WholeComputerObject
+            }
+       }
+
       
 }
 
