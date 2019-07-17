@@ -12,8 +12,6 @@ This module is the result of much learning by myself, a student. As such, expect
 # Requirements
 This tool has several dependencies/pre-requisites that need to be met in order to be used succesfully. These are:
 
--dbatools module installed. The primary function of this module is to use dbatools Invoke-DbaQuery to pull information from a SQL database. Because it relies on literally only this function, and the dbatools module is available under the MIT license, I hope to incorporate this function directly into the Lansweeper-PS package in order to save time space. More on that below.
-
 -Currently, the module only works with Lansweeper installs that are built on top of a true SQL database. CompactSQL databases are not supported but are a future goal. 
 
 -The account running the module has to have read access to Lansweeper's SQL database. This can be accomplished on the SQL server with SQL credentials, or using windows credentials (if mixed authentication is supported on your SQL server). Every cmdlet in this module does accept -Credentials, and dbatools supports connecting via SQL credentials or Windows Authentication. 
