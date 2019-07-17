@@ -3,7 +3,7 @@ Wrapper functions for dbatools to query user and asset information directly from
 https://github.com/sqlcollaborative/dbatools
 
 # Install
-Lansweeper-PS is published on the PSGallery (current version 1.25) and can be installed with Install-Module Lansweeper-PS
+Lansweeper-PS is published on the PSGallery (current version 1.27.4) and can be installed with Install-Module Lansweeper-PS
 https://www.powershellgallery.com/packages/Lansweeper-PS/
 
 # A Note
