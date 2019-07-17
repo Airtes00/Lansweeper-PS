@@ -13,30 +13,33 @@ Install-Module Lansweeper-PS
 #### Note: An explanation of the different tables queried is at the bottom of this readme.
 ### SQLInstance is a mandatory parameter for each cmdlet. This specifies the SQL server where your Lansweeper database is stored, and can be found in Lansweeper > Configuration > Database Tables
 
-![DB](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/database.PNG "Databse Location")
+![DB](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/database.PNG "Database Location")
 
-**Example 1**
+## Example 1
 
-In the first example, we pass the Get-LSAsset cmdlet a computer name in order to learn everything about it from the Assets table.
-Note that even tho we got the user's credentials and passed them to the cmdlet, this is not mandatory. It is shown here for demonstration purposes.
+We can pass the **Get-LSAsset** cmdlet a computer name to learn everything about it from the Assets table.
+
+*Even though we got the user's credentials and passed them to the cmdlet, this is not mandatory. It is shown here for demonstration purposes.*
+
 We can also see the results of our query are now properties of our variable that we are free to reference whenever we want.
 ```Powershell
 $Creds = Get-Credential
 $var = Get-LSAsset -AssetName "Class-SVR1" -SQLInstance "SVR3-SQL" -Credentials $Creds
 ```
-![Example1](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/database.PNG "Location of database)
+![Example1](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get-LSAsset.PNG "Results of Get-LSAsset")
 
-**Example 2**
+## Example 2
 
-For a more complete look at our asset we use the Get-LSComputerObject. This cmdlet queries many different tables that hold different pieces of information about a computer. This will take an Asset Name or an AssetID as input.
+For a more complete look at our asset we use the **Get-LSComputerObject**. This cmdlet queries different tables that hold more pieces of information about a computer. This will take an AssetName or an AssetID as input.
+
 ```Powershell
 Get-LSComputerObject -AssetName "Marcus-Laptop" -SQLInstance "SVR3-SQL"
 ```
 ![Example2](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get-LSComputerObject.PNG "Results of Get-LSCoputerObject")
 
-**Example 3**
+## Example 3
 
-But let's flip the script and say now that we only have a computer's serial number, and we want to know the FQDN (or anything else). We can make use of the Get-LSAssetCustom cmdlet to match an AssetID to the serial number, and then lookup that AssetID in Get-LSComputerObject.
+But let's say that we only have a computer's serial number, and we want to know the FQDN. Let's use **Get-LSAssetCustom** to match an AssetID to the serial number, and then look up that AssetID in **Get-LSComputerObject**.
 
 ```Powershell
 $MyID = (Get-LSAssetCustom -SerialNumber "C17QC073FVH3" -SQLInstance "SVR3-SQL").AssetID
@@ -44,9 +47,11 @@ Get-LSComputerObject -AssetID $MyID -SQLInstance "SVR3-SQL" | Select FQDN
 ```
 ![Example3](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get%20Computer%20Serial.PNG "Turning our computer serial into a FQDN")
 
-**Example 4**
+## Example 4
 
-Our last example will allow us to see the physical disks attached to a Windows system. Get-LSDisks queries the DiskDrives table to return information about all physical disks attached to an asset. This also needs an AssetID to run, which we will get in the same manner as above. The Get-LSLinuxVolumes cmdlet functions the same way, but for Linux assets by querying the LinuxVolumes table.
+We can also see the physical disks attached to a Windows system. **Get-LSDisks** queries the DiskDrives table to return information about all physical disks attached to an asset. This also needs an AssetID to run, which we will get in the same manner as above. 
+
+*The **Get-LSLinuxVolumes** cmdlet works the same way, but for Linux assets by querying the LinuxVolumes table.*
 
 ```Powershell
 $Server = "SVR3-SQL"
