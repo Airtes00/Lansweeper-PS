@@ -21,7 +21,6 @@ We can pass the **Get-LSAsset** cmdlet a computer name to learn everything about
 
 *Even though we got the user's credentials and passed them to the cmdlet, this is not mandatory. It is shown here for demonstration purposes.*
 
-We can also see the results of our query are now properties of our variable that we are free to reference whenever we want.
 ```Powershell
 $Creds = Get-Credential
 $var = Get-LSAsset -AssetName "Class-SVR1" -SQLInstance "SVR3-SQL" -Credentials $Creds
