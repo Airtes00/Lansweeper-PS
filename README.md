@@ -3,7 +3,7 @@ Wrapper functions for dbatools to query user and asset information directly from
 https://github.com/sqlcollaborative/dbatools
 
 # Install
-Lansweeper-PS is published on the PSGallery (current version 1.25) and can be installed with Install-Module Lansweeper-PS
+Lansweeper-PS is published on the PSGallery (current version 1.27.4) and can be installed with Install-Module Lansweeper-PS
 https://www.powershellgallery.com/packages/Lansweeper-PS/
 
 # A Note
@@ -11,8 +11,6 @@ This module is the result of much learning by myself, a student. As such, expect
 
 # Requirements
 This tool has several dependencies/pre-requisites that need to be met in order to be used succesfully. These are:
-
--dbatools module installed. The primary function of this module is to use dbatools Invoke-DbaQuery to pull information from a SQL database. Because it relies on literally only this function, and the dbatools module is available under the MIT license, I hope to incorporate this function directly into the Lansweeper-PS package in order to save time space. More on that below.
 
 -Currently, the module only works with Lansweeper installs that are built on top of a true SQL database. CompactSQL databases are not supported but are a future goal. 
 
