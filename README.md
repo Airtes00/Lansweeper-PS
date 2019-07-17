@@ -13,7 +13,7 @@ Install-Module Lansweeper-PS
 #### Note: An explanation of the different tables queried is at the bottom of this readme.
 ### SQLInstance is a mandatory parameter for each cmdlet. This specifies the SQL server where your Lansweeper database is stored, and can be found in Lansweeer > Configuration > Database Tables
 
-![DB](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get-LSAsset.PNG "Results of Get-LSAsset")
+![DB](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/database.PNG "Databse Location")
 
 **Example 1**
 
