@@ -1,14 +1,4 @@
-﻿<#Invoke-DbaQuery function is created by the dbatools team and is provided under the MIT license.
-
-        Author: Friedrich Weinmann (@FredWeinmann)
-
-        Website: https://dbatools.io
-        Copyright: (c) 2018 by dbatools, licensed under MIT
-        License: MIT https://opensource.org/licenses/MIT
-
-        Link: https://dbatools.io/Invoke-DbaQuery
-#>
-function Get-LSAsset
+﻿function Get-LSAsset
 {
 <#
 .Description
@@ -20,6 +10,7 @@ Get-Asset queries lansweeperdb.dbo.tblAssets for asset(s) matching the passed pa
     [CmdletBinding()]
     param
         (
+        [parameter(Mandatory=$false)]$AssetID,
         [parameter(Mandatory=$false)]$AssetName,
         [parameter(Mandatory=$false)]$Credentials,
         [parameter(Mandatory=$false)]$IPAddress,
@@ -48,6 +39,7 @@ Get-Asset queries lansweeperdb.dbo.tblAssets for asset(s) matching the passed pa
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break #Allows only one parameter to be run without creating literally dozens of parameter sets
             }
        }
 }
@@ -116,6 +108,7 @@ Get-AssetCustom queries lansweeperdb.dbo.tblAssetCustom for asset(s) matching th
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssetCustom WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
             }
        }
 
@@ -158,6 +151,7 @@ Get-LSADComputer queries lansweeperdb.dbo.tblADComputer for asset(s) matching th
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblADComputers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
             }
        }
 }
@@ -198,20 +192,14 @@ Get-LSUser queries lansweeperdb.dbo.tblUsers for asset(s) matching the passed pa
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblUsers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
             }
        }
 }
 
 function Get-LSComputerObject
 {
-<#
-.Description
-Queries the tables listed below to generate an object that completely represents a computer on the network.
--SQLInstance parameter is used to specify the SQL server where the database exists.
 
-lansweeperdb.dbo.tblAssetCustom, lansweeperdb.dbo.tblScanHistory, lansweeperdb.dbo.tblComputerSystem, lansweeperdb.dbo.tblCPlogoninfo, lansweeperdb.dbo.tblNetwork,
- lansweeperdb.dbo.tblNetworkAdapter, and lansweeperdb.dbo.tblProxy.
-#>
     [CmdletBinding()]
 
     #This function requires that the input be an AssetName in order to locate the computer across multiple tables. 
@@ -222,66 +210,100 @@ lansweeperdb.dbo.tblAssetCustom, lansweeperdb.dbo.tblScanHistory, lansweeperdb.d
         [parameter(Mandatory=$true) ]$SQLInstance,
         [parameter(Mandatory=$false)]$Credentials
         )
-        
-        #The Assets table is loaded first in order to locate the AssetID for the given AssetName to effectively locate the asset across tables.
-        $AssetsTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+
+        $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
 
         #AssetID is assigned for use in the rest of the queries.
-        $AssetID = $AssetsTable_Properties.AssetID
-        
-        #Tables are queried by AssetID to locate all relevant properties of the asset.
-        $AssetCustomTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssetCustom WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $ScanHistoryTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblScanHistory WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $ComputerSystemTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblComputerSystem WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $CPLogonInfoTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblCPlogoninfo WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $NetworkTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblNetwork WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $NetworkAdapterTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblNetworkAdapter WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        $ProxyTable_Properties = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblProxy WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-        
-        $WholeComputerObject = $AssetsTable_Properties
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "PurchaseDate" -Value ($AssetCustomTable_Properties).PurchaseDate
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "WarrantyDate" -Value ($AssetCustomTable_Properties).WarrantyDate
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastPatched" -Value ($AssetCustomTable_Properties).LastPatched
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastFullBackup" -Value ($AssetCustomTable_Properties).LastFullBackup
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastFullImage" -Value ($AssetCustomTable_Properties).LastFullImage
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "Location" -Value ($AssetCustomTable_Properties).Location
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "Model" -Value ($AssetCustomTable_Properties).Model
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "SerialNumber" -Value ($AssetCustomTable_Properties).SerialNumber
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DNSName" -Value ($AssetCustomTable_Properties).DNSName
+        $AssetID = $AssetsTable.AssetID
 
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "ScanTime" -Value ($ScanHistoryTable_Properties).ScanTime
+        $SQLQuery = Get-Content .\LSQuery.sql
+        $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File .\LSQuery.sql -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
 
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "CurrentTimeZone" -Value ($ComputerSystemTable_Properties).CurrentTimeZone
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DayLightInEffect" -Value ($ComputerSystemTable_Properties).DaylightInEffect
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NumberOfLogicalProcessors" -Value ($ComputerSystemTable_Properties).NumberOfLogicalProcessors
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NumberOfProcessors" -Value ($ComputerSystemTable_Properties).NumberOfProcessors
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "PartOfDomain" -Value ($ComputerSystemTable_Properties).PartOfDomain
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "PowerOnPasswordStatus" -Value ($ComputerSystemTable_Properties).PowerOnPasswordStatus
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "Roles" -Value ($ComputerSystemTable_Properties).Roles
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "SystemType" -Value ($ComputerSystemTable_Properties).SystemType
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "TermalState" -Value ($ComputerSystemTable_Properties).ThermalState
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "TotalPhysicalMemory" -Value ($ComputerSystemTable_Properties).TotalPhysicalMemory
-
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogonTime" -Value ($CPLogonInfoTable_Properties).logontime
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastUserLogonDomain" -Value ($CPLogonInfoTable_Properties).Domain
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "LastLogon" -Value ($CPLogonInfoTable_Properties).Username
-
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DefaultIPGateway" -Value ($NetworkTable_Properties).DefaultIPGateway
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NetworkConfigDescription" -Value ($NetworkTable_Properties).Description
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DHCPEnabled" -Value ($NetworkTable_Properties).DHCPEnabled
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DHCPServer" -Value ($NetworkTable_Properties).DHCPServer
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "DNSDomain" -Value ($NetworkTable_Properties).DNSDomain
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "IPSubnet" -Value ($NetworkTable_Properties).IPSubnet
-
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NICManufacturer" -Value ($NetworkAdapterTable_Properties).Manufacturer
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "NICName" -Value ($NetworkAdapterTable_Properties).Name #But his nickname is Steve
-
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "ProxyServer" -Value ($ProxyTable_Properties).ProxyServer
-        $WholeComputerObject | Add-Member -MemberType NoteProperty -Name "ProxyPortNumber" -Value ($ProxyTable_Properties).ProxyPortNumber
-
-        #The compiled object is returned with all relevant properties.
         $WholeComputerObject
       
+}
+
+function Get-LSLinuxSystem
+{
+        [CmdletBinding()]
+    param
+        (
+        [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false)]$Manufacturer,
+        [parameter(Mandatory=$false)]$ProductName,
+        [parameter(Mandatory=$false)]$Serial,
+        [parameter(Mandatory=$false)]$UUID,
+        [parameter(Mandatory=$false)]$NetworkNodtHostName,
+        [parameter(Mandatory=$false)]$KernelName,
+        [parameter(Mandatory=$false)]$KernelRelease,
+        [parameter(Mandatory=$false)]$KernelVersion,
+        [parameter(Mandatory=$false)]$MachineHardwareName,
+        [parameter(Mandatory=$false)]$HardwarePlatform,
+        [parameter(Mandatory=$false)]$OperatingSystem,
+        [parameter(Mandatory=$false)]$OSRelease,
+        [parameter(Mandatory=$false)]$SystemSku,
+        [parameter(Mandatory=$true) ]$SQLInstance,
+        [parameter(Mandatory=$false)]$Credentials
+        )
+
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
+            {
+             $ComputerObject = $PSBoundParameters.item($Parameter)
+             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxSystem WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
+            }
+       }
+}
+
+function Get-LSDisks
+{
+        [CmdletBinding()]
+    param
+        (
+        [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false)]$DriveType,
+        [parameter(Mandatory=$false)]$Filesystem,
+        [parameter(Mandatory=$false)]$VolumeName,
+        [parameter(Mandatory=$false)]$VolumeSerialNumber,
+        [parameter(Mandatory=$true) ]$SQLInstance,
+        [parameter(Mandatory=$false)]$Credentials
+
+        )
+
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
+            {
+             $ComputerObject = $PSBoundParameters.item($Parameter)
+             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
+            }
+       }
+}
+
+function Get-LSLinuxVolumes
+{
+        [CmdletBinding()]
+    param
+        (
+        [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false)]$Type,
+        [parameter(Mandatory=$true) ]$SQLInstance,
+        [parameter(Mandatory=$false)]$Credentials
+
+        )
+
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
+            {
+             $ComputerObject = $PSBoundParameters.item($Parameter)
+             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             break
+            }
+       }
 }
 
 Export-ModuleMember -Function "Get-*"
