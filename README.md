@@ -2,6 +2,8 @@
 Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes...without knowing SQL.
 https://github.com/sqlcollaborative/dbatools
 
+[Check out my LinkedIn!](https://www.linkedin.com/in/marcus-dean/)
+
 # Install
 Lansweeper-PS is published on the PSGallery (current version 1.27.6) and can be installed with Install-Module Lansweeper-PS
 https://www.powershellgallery.com/packages/Lansweeper-PS/
