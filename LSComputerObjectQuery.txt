@@ -4,6 +4,14 @@ Select Top 1 tblAssets.AssetID,
   tblAssetCustom.Building,
   tblComputersystem.CurrentTimeZone,
   tblAssetCustom.Custom1,
+  tblAssetCustom.Custom2,
+  tblAssetCustom.Custom3,
+  tblAssetCustom.Custom4,
+  tblAssetCustom.Custom5,
+  tblAssetCustom.Custom6,
+  tblAssetCustom.Custom7,
+  tblAssetCustom.Custom8,
+  tblAssetCustom.Custom9,
   tblAssetCustom.Custom10,
   tblAssetCustom.Custom11,
   tblAssetCustom.Custom12,
@@ -14,15 +22,7 @@ Select Top 1 tblAssets.AssetID,
   tblAssetCustom.Custom17,
   tblAssetCustom.Custom18,
   tblAssetCustom.Custom19,
-  tblAssetCustom.Custom2,
   tblAssetCustom.Custom20,
-  tblAssetCustom.Custom3,
-  tblAssetCustom.Custom4,
-  tblAssetCustom.Custom5,
-  tblAssetCustom.Custom6,
-  tblAssetCustom.Custom7,
-  tblAssetCustom.Custom8,
-  tblAssetCustom.Custom9,
   tblComputersystem.DaylightInEffect,
   tblNetwork.DefaultIPGateway,
   tblAssetCustom.Department,
@@ -76,7 +76,6 @@ From tblAssets
   Inner Join tblCPlogoninfo On tblAssets.AssetID = tblCPlogoninfo.AssetID
   Inner Join tblNetwork On tblAssets.AssetID = tblNetwork.AssetID
   Inner Join tblNetworkAdapter On tblAssets.AssetID = tblNetworkAdapter.AssetID
-  Full Join tblDiskDrives on tblAssets.AssetID = tblDiskDrives.AssetID
   Full Join tblProxy On tblAssets.AssetID = tblProxy.AssetID
 Where tblAssets.AssetID = @AssetID
 Order by logontime Desc

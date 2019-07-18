@@ -103,7 +103,7 @@ PrivateData = @{
         LicenseUri = 'https://opensource.org/licenses/MIT'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+         ProjectUri = 'https://github.com/marcus-dean/Lansweeper-PS'
 
         # A URL to an icon representing this module.
         # IconUri = ''

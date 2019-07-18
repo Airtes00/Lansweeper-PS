@@ -1,4 +1,21 @@
-﻿function Get-LSAsset
+﻿function EncryptableVolumeStatus($AssetObject, $AssetID)
+{
+    $MyHash = [ordered]@{}
+    $DiskArray = Invoke-Command {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblEncryptableVolume WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SqlInstance "SVR3-SQL"}
+
+    foreach($Disk in $DiskArray)
+    {
+        $MyHash[$Disk.DriveLetter] = $Disk.ProtectionStatus
+    }
+
+    if ($MyHash["C:"] -eq 0) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value $false -Force}
+    elseif ($MyHash["C:"] -eq 1) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value $true -Force}
+    else {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value "Unknown"}
+
+    $AssetObject | Add-Member -MemberType NoteProperty -Name "EncryptableDisks" -Value $MyHash -Force
+}
+
+function Get-LSAsset
 {
 <#
 .Description
@@ -212,6 +229,9 @@ function Get-LSComputerObject
         [parameter(Mandatory=$false)]$Credentials
         )
 
+        #Creates the empty hashtable where we will later store the status of encryptable volumes on our search result
+        $MyHash = [ordered]@{}
+
         foreach ($Parameter in $PSBoundParameters.keys) 
        {
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
@@ -220,15 +240,20 @@ function Get-LSComputerObject
 
                 #MyAssetID is assigned for use in the rest of the queries.
                 $MyAssetID = $AssetsTable.AssetID
-                $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+                $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+
+                #Using our new AssetID to query the EncryptableVolumes table and add the results to the DiskTable hashtable
+                EncryptableVolumeStatus $WholeComputerObject $MyAssetID
                 $WholeComputerObject
                 break
             }
 
             elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
             {
-            $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} 
+            $WholeComputerObject = Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSComputerObjectQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+            EncryptableVolumeStatus $WholeComputerObject $WholeComputerObject.AssetID
             $WholeComputerObject
+            break
             }
        }
 
@@ -312,7 +337,7 @@ function Get-LSLinuxVolumes
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxVolumes WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
              break
             }
        }
