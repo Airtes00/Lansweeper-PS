@@ -1,15 +1,42 @@
 # Lansweeper-PS
-Wrapper functions for dbatools to query user and asset information directly from the Lansweeper databases for automation purposes...without knowing SQL.
+Provides functionality to load asset information in Powershell from the Lansweeper database.
+
+SQL queries are accomplished with dbatools to interact with the SQL server.
 https://github.com/sqlcollaborative/dbatools
 
 [Check out my LinkedIn!](https://www.linkedin.com/in/marcus-dean/)
 
-# Install
-Lansweeper-PS is published on the PSGallery (current version 1.27.6) and can be installed with Install-Module Lansweeper-PS
+# Install + Update
+Lansweeper-PS is published on the PSGallery (current version 1.27.6) and can be installed with **Install-Module Lansweeper-PS**
 https://www.powershellgallery.com/packages/Lansweeper-PS/
+
+Module will be updated periodically for features and improvements. 
+
 ```Powershell
 Install-Module Lansweeper-PS
 ```
+
+# Index
+
+[Usage](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#usage)
+
+[Example 1 - Get-LSAsset](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-1)
+
+[Example 2 - Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-2)
+
+[Example 3 - Get-LSAssetCustom + Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-3)
+
+[Example 4 - Get-LSDisks + Get-LSLinuxVolumes](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-4)
+
+[Parameters](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Function-Parameters)
+
+[Tables Queried](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#tables-queried)
+
+[Notes](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#A-Note)
+
+[Requirements](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Requirements)
+
+[To Do](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#to-do)
 
 # Usage
 **Note: An explanation of the different tables queried is at the bottom of this readme.**
@@ -61,6 +88,27 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 ```
 ![Example4](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get-LSDisks.PNG "Results of Get-LSDisks")
 
+# Function Parameters
+
+*Function parameters are based on the columns/data held in the specific table that they query. Most, but not all, of the columns have been made into parameters. Each function will accept 1 parameter besides Credentials and SQLInstance, this is purposeful to prevent returning many results as the result of a vague parameter. Functions can still return multiple results if the parameter entered (like Domain) would match with multiple assets.*
+
+**Get-LSAsset**: AssetID, AssetName, Credentials, IPAddress, LastChanged, Lastseen, LastTried, LastTriggered, LastActiveScan, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
+
+**Get-LSAssetCustom**: AssetID, BranchOffice, Contact, CustID, DNSName, Department DeviceVersion, FirmwareVersion, HardwareVersion, HTTPServer, HTTPSServer, SNMPOID, SMTPHeader, FTPHeader, LastChanged, Location, LastPatched, LastFullBackup, LastFullImage, Manufacturer, Model, Serialnumber, SQLInstance, SystemSKU, Warrantydate, Custom1-20
+
+**Get-LSADComputer**: AdcomputerID, AssetID, Comment, Company, Description, Location, OU, Lastchanged, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
+
+**Get-LSADUser**: AssetID, Accounttype, BuiltInAdmin, Disabled, Description, Fullname, Lockout, Name, PasswordChangeable, PasswordExpires, PasswordRequired, SID, Status, UserID, LastChanged, SQLInstance, Credentials
+
+**Get-LSLinuxSystem**: AssetID, Manufacturer, ProductName, Serial, UUID, NetworkNodtHostName, KernelName, KernelRelease, KernelVersion, MachineHardwareName, HardwarePlatform, OperatingSystem, OSRelease, SystemSku, SQLInstance, Credentials 
+
+**Get-LSDisks**: AssetID, DriveType, Filesystem, VolumeName, VolumeSerialNumber, SQLInstance, Credentials 
+
+**Get-LSLinuxVolumes**: AssetID, Type, SQLInstance, Credentials 
+
+**Get-LSComputerObject**: AssetID, AssetName, SQLInstance, Credentials 
+
+
 # Tables Queried
 | Function               | Table  Queried     | 
 | -----------------------|:------------------:| 
@@ -68,7 +116,6 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 | Get-LSAssetCustom      | tblAssetCustom     | 
 | Get-LSADComputer       | tblADComputers     |
 | Get-LSUser             | tblUsers           |
-| Get-LSADComputer       | tblADComputers     |
 | Get-LSLinuxSystem      | tblLinuxSystem     |
 | Get-LSDisks            | tblDiskDrives      |
 | Get-LSLinuxVolumes     | tblLinuxVolumes    |
