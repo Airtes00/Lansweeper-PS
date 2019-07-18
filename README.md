@@ -90,7 +90,7 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 
 # Function Parameters
 
-*Function parameters are based on the columns/data held in the specific table that they query. Most, but not all, of the columns have been made into parameters.*
+*Function parameters are based on the columns/data held in the specific table that they query. Most, but not all, of the columns have been made into parameters. Each function will accept 1 parameter besides Credentials and SQLInstance, this is purposeful to prevent returning many results as the result of a vague parameter. Functions can still return multiple results if the parameter entered (like Domain) would match with multiple assets.*
 
 **Get-LSAsset**: AssetID, AssetName, Credentials, IPAddress, LastChanged, Lastseen, LastTried, LastTriggered, LastActiveScan, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
 
