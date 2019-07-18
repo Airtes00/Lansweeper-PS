@@ -8,9 +8,9 @@
         $MyHash[$Disk.DriveLetter] = $Disk.ProtectionStatus
     }
 
-    if ($MyHash["C:"] -eq 0) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value $false -Force}
-    elseif ($MyHash["C:"] -eq 1) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value $true -Force}
-    else {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncyptionStatus" -Value "Unknown"}
+    if ($MyHash["C:"] -eq 0) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value $false -Force}
+    elseif ($MyHash["C:"] -eq 1) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value $true -Force}
+    else {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value "Unknown"}
 
     $AssetObject | Add-Member -MemberType NoteProperty -Name "EncryptableDisks" -Value $MyHash -Force
 }
