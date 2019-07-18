@@ -91,21 +91,21 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 
 *Function parameters are based on the columns/data held in the specific table that they query. Most, but not all, of the columns have been made into parameters.*
 
-**Get-LSAsset**: $AssetID, $AssetName, $Credentials, $IPAddress, $LastChanged, $Lastseen, $LastTried, $LastTriggered, $LastActiveScan, $LastScheduled, $LastSaved, $MAC, $Memory, $OSCode, $Processor, $SQLInstance, $Scanserver, $SP, $Username, $Userdomain 
+**Get-LSAsset**: AssetID, AssetName, Credentials, IPAddress, LastChanged, Lastseen, LastTried, LastTriggered, LastActiveScan, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
 
-**Get-LSAssetCustom**: $AssetID, $BranchOffice, $Contact, $CustID, $DNSName, $Department $DeviceVersion, $FirmwareVersion, $HardwareVersion, $HTTPServer, $HTTPSServer, $SNMPOID, $SMTPHeader, $FTPHeader, $LastChanged, $Location, $LastPatched, $LastFullBackup, $LastFullImage, $Manufacturer, $Model, $Serialnumber, $SQLInstance, $SystemSKU, $Warrantydate, $Custom1-20
+**Get-LSAssetCustom**: AssetID, BranchOffice, Contact, CustID, DNSName, Department DeviceVersion, FirmwareVersion, HardwareVersion, HTTPServer, HTTPSServer, SNMPOID, SMTPHeader, FTPHeader, LastChanged, Location, LastPatched, LastFullBackup, LastFullImage, Manufacturer, Model, Serialnumber, SQLInstance, SystemSKU, Warrantydate, Custom1-20
 
-**Get-LSADComputer**: $AdcomputerID, $AssetID, $Comment, $Company, $Description, $Location, $OU, $Lastchanged, $LastScheduled, $LastSaved, $MAC, $Memory, $OSCode, $Processor, $SQLInstance, $Scanserver, $SP, $Username, $Userdomain 
+**Get-LSADComputer**: AdcomputerID, AssetID, Comment, Company, Description, Location, OU, Lastchanged, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
 
-**Get-LSADUser**: $AssetID, $Accounttype, $BuiltInAdmin, $Disabled, $Description, $Fullname, $Lockout, $Name, $PasswordChangeable, $PasswordExpires, $PasswordRequired, $SID, $Status, $UserID, $LastChanged, $SQLInstance, $Credentials
+**Get-LSADUser**: AssetID, Accounttype, BuiltInAdmin, Disabled, Description, Fullname, Lockout, Name, PasswordChangeable, PasswordExpires, PasswordRequired, SID, Status, UserID, LastChanged, SQLInstance, Credentials
 
-**Get-LSLinuxSystem**: $AssetID, $Manufacturer, $ProductName, $Serial, $UUID, $NetworkNodtHostName, $KernelName, $KernelRelease, $KernelVersion, $MachineHardwareName, $HardwarePlatform, $OperatingSystem, $OSRelease, $SystemSku, $SQLInstance, $Credentials 
+**Get-LSLinuxSystem**: AssetID, Manufacturer, ProductName, Serial, UUID, NetworkNodtHostName, KernelName, KernelRelease, KernelVersion, MachineHardwareName, HardwarePlatform, OperatingSystem, OSRelease, SystemSku, SQLInstance, Credentials 
 
-**Get-LSDisks**: $AssetID, $DriveType, $Filesystem, $VolumeName, $VolumeSerialNumber, $SQLInstance, $Credentials 
+**Get-LSDisks**: AssetID, DriveType, Filesystem, VolumeName, VolumeSerialNumber, SQLInstance, Credentials 
 
-**Get-LSLinuxVolumes**: $AssetID, $Type, $SQLInstance, $Credentials 
+**Get-LSLinuxVolumes**: AssetID, Type, SQLInstance, Credentials 
 
-**Get-LSComputerObject**: $AssetID, $AssetName, $SQLInstance, $Credentials 
+**Get-LSComputerObject**: AssetID, AssetName, SQLInstance, Credentials 
 
 
 # Tables Queried
