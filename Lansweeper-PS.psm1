@@ -1,4 +1,13 @@
-﻿function EncryptableVolumeStatus($AssetObject, $AssetID)
+﻿if (Get-Module -ListAvailable -Name dbatools) {
+    import-module dbatools
+} 
+else {
+    write-host "The module dbatools is not installed, but it is required to function. Please follow the prompts to install dbatools."
+    install-module dbatools
+    import-module dbatools
+}
+
+function EncryptableVolumeStatus($AssetObject, $AssetID)
 {
     $MyHash = [ordered]@{}
     $DiskArray = Invoke-Command {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblEncryptableVolume WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SqlInstance "SVR3-SQL"}

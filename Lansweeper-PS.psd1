@@ -12,7 +12,7 @@
 RootModule = 'Lansweeper-PS.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.27.8'
+ModuleVersion = '1.30'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -51,7 +51,7 @@ PowerShellVersion = '3.0'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @('dbatools')
+# RequiredModules = 'dbatools'
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -109,9 +109,10 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Added functions and made a major overhaul of the Get-LSComputerObject function 
-                        -Version 1.27.8: Added EncryptableDisk query to Get-LSComputerObject, cleaned up LSComputerObjectQuery.txt, Fixed typo
-                       '
+        ReleaseNotes = '
+                        -Version 1.3: Added manual verification and installation of dbatools to avoid error on importing because 
+                        dbatools took slightly too long and would cause the module import to error out
+                        '
 
         # Prerelease string of this module
         # Prerelease = ''
