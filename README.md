@@ -28,6 +28,8 @@ Install-Module Lansweeper-PS
 
 [Example 4 - Get-LSDisks + Get-LSLinuxVolumes](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-4)
 
+[For Automation](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Automation-Examples)
+
 [Parameters](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Function-Parameters)
 
 [Tables Queried](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#tables-queried)
@@ -87,6 +89,32 @@ $MyID = (Get-LSAsset -AssetName "Class-SVR1" -SQLInstance $Server).AssetID
 Get-LSDisks -AssetID $MyID -SQLInstance $Server 
 ```
 ![Example4](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/Get-LSDisks.PNG "Results of Get-LSDisks")
+
+# Automation Examples
+
+## Bitlocker
+
+Below is an example script to check Bitlocker on the C: drive of our assets. The unencrypted assets are exported to a file to be troubleshot or to have Bitlocker enabled remotely. 
+
+```Powershell
+# To get the list of our unsecure assets 
+$list = Get-Content .\computers.csv
+$SQLServer = "YourSQLServer"
+foreach ($asset in $list){
+    $Object = Get-LSComputerObject -AssetName $asset -SQLInstance $SQLServer
+    if ($object.OSDriveEncryptionStatus -NotLike $True){$Object.FQDN | Out-File -Append "NoBDE.csv"}
+ }
+ 
+ # To remotely enable BDE
+ $ToBeEncrypted = Get-Content .\NoBDE.csv
+ foreach ($computer in $ToBeEncrypted){
+ manage-bde -on C: -cn $computer -rp
+ Restart-Computer -ComputerName $computer
+ }
+ ```
+After this, a GPO or the manage-bde tool can be used to save the new recovery keys to Active Directory.
+
+https://www.top-password.com/blog/tag/manually-backup-bitlocker-recovery-key-to-ad/
 
 # Function Parameters
 
