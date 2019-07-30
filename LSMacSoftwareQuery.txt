@@ -1,0 +1,26 @@
+USE lansweeperdb
+Select Top 1000000 tblAssets.AssetID,
+  tblAssets.AssetName,
+  tblAssets.Domain,
+  tblAssets.IPAddress,
+  tblAssetCustom.Model,
+  tblMacOSInfo.SystemVersion As OS,
+  tblAssets.Lastseen,
+  tblAssets.Lasttried,
+  tblSoftwareUni.softwareName As Software,
+  tblMacApplications.Version As Version,
+  tblMacApplications.LastChanged
+From tblAssets
+  Inner Join tblMacOSInfo On tblMacOSInfo.AssetID = tblAssets.AssetID
+  Inner Join tblAssetCustom On tblAssets.AssetID = tblAssetCustom.AssetID
+  Inner Join tsysAssetTypes On tsysAssetTypes.AssetType = tblAssets.Assettype
+  Inner Join tsysIPLocations On tsysIPLocations.LocationID =
+    tblAssets.LocationID
+  Inner Join tblState On tblState.State = tblAssetCustom.State
+  Inner Join tblMacApplications On
+    tblAssets.AssetID = tblMacApplications.AssetID
+  Inner Join tblSoftwareUni On tblSoftwareUni.SoftID = tblMacApplications.softid
+Where tblAssets.AssetID = @AssetID
+Order By tblAssets.AssetName,
+  software,
+  version

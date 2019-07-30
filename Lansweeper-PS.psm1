@@ -18,8 +18,8 @@ function EncryptableVolumeStatus($AssetObject, $AssetID)
     }
 
     if ($MyHash["C:"] -eq 0) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value $false -Force}
-    elseif ($MyHash["C:"] -eq 1) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value $true -Force}
-    else {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value "Unknown"}
+    if ($MyHash["C:"] -eq 1) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value $true -Force}
+    if ($MyHash["C:"] -eq 2) {$AssetObject | Add-Member -MemberType NoteProperty -Name "OSDriveEncryptionStatus" -Value "Unknown" -Force}
 
     $AssetObject | Add-Member -MemberType NoteProperty -Name "EncryptableDisks" -Value $MyHash -Force
 }
@@ -309,6 +309,7 @@ function Get-LSDisks
     param
         (
         [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false) ]$AssetName,
         [parameter(Mandatory=$false)]$DriveType,
         [parameter(Mandatory=$false)]$Filesystem,
         [parameter(Mandatory=$false)]$VolumeName,
@@ -320,7 +321,15 @@ function Get-LSDisks
 
         foreach ($Parameter in $PSBoundParameters.keys) 
        {
-            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
+            {
+                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+
+                $MyAssetID = $AssetsTable.AssetID
+                Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE AssetID = @Variable" -SqlParameters @{Variable = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+            }
+
+            elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
@@ -348,6 +357,64 @@ function Get-LSLinuxVolumes
              $ComputerObject = $PSBoundParameters.item($Parameter)
              Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxVolumes WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
              break
+            }
+       }
+}
+
+function Get-LSWindowsSoftware
+{
+        [CmdletBinding()]
+    param
+        (
+        [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false)]$AssetName,
+        [parameter(Mandatory=$true) ]$SQLInstance,
+        [parameter(Mandatory=$false)]$Credentials
+
+        )
+
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
+            {
+                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+
+                $MyAssetID = $AssetsTable.AssetID
+                Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSWindowsSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, IPAddress, Software, Version
+            }
+
+            elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
+            {
+            Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSWindowsSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, IPAddress, Software, Version
+            }
+       }
+}
+
+function Get-LSMacSoftware
+{
+        [CmdletBinding()]
+    param
+        (
+        [parameter(Mandatory=$false)]$AssetID,
+        [parameter(Mandatory=$false)]$AssetName,
+        [parameter(Mandatory=$true) ]$SQLInstance,
+        [parameter(Mandatory=$false)]$Credentials
+
+        )
+
+        foreach ($Parameter in $PSBoundParameters.keys) 
+       {
+            if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
+            {
+                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+
+                $MyAssetID = $AssetsTable.AssetID
+                Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, Model, IPAddress, Software, Version
+            }
+
+            elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
+            {
+            Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, Model, IPAddress, Software, Version
             }
        }
 }

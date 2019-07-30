@@ -1,0 +1,18 @@
+USE lansweeperdb
+Select Top 1000000 tblAssets.AssetID,
+  tblAssets.AssetName,
+  tblAssets.IPAddress,
+  tblAssets.AssetUnique,
+  tblAssets.Domain,
+  tblSoftwareUni.softwareName As software,
+  tblSoftware.softwareVersion As version,
+  tblSoftwareUni.SoftwarePublisher As publisher
+From tblSoftware
+  Inner Join tblAssets On tblSoftware.AssetID = tblAssets.AssetID
+  Inner Join tblSoftwareUni On tblSoftware.softID = tblSoftwareUni.SoftID
+  Inner Join tblAssetCustom On tblAssets.AssetID = tblAssetCustom.AssetID
+  Inner Join tsysOS On tblAssets.OScode = tsysOS.OScode
+Where tblAssets.AssetID = @AssetID
+Order By tblAssets.AssetName,
+  software,
+  version

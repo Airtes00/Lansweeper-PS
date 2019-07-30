@@ -12,7 +12,7 @@
 RootModule = 'Lansweeper-PS.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.30'
+ModuleVersion = '1.30.04'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -71,7 +71,7 @@ PowerShellVersion = '3.0'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Get-LSAsset', 'Get-LSAssetCustom', 'Get-LSADComputer', 'Get-LSUser', 
                'Get-LSComputerObject', 'Get-LSLinuxSystem', 'Get-LSDisks', 
-               'Get-LSLinuxVolumes'
+               'Get-LSLinuxVolumes', 'Get-LSWindowsSoftware', 'Get-LSMacSoftware'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -89,7 +89,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = 'LSComputerObjectQuery.txt'
+FileList = 'LSComputerObjectQuery.txt', 'LSWindowsSoftwareQuery.txt', 'LSMacSoftwareQuery.txt'
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -110,6 +110,7 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = '
+                        -Version 1.30.04: Added modules for querying windows and mac software, added AssetName as a parameter for Get-LSDisks
                         -Version 1.3: Added manual verification and installation of dbatools to avoid error on importing because 
                         dbatools took slightly too long and would cause the module import to error out
                         '
