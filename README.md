@@ -132,12 +132,17 @@ https://www.top-password.com/blog/tag/manually-backup-bitlocker-recovery-key-to-
 
 **Get-LSDisks**: AssetID, DriveType, Filesystem, VolumeName, VolumeSerialNumber, SQLInstance, Credentials 
 
-**Get-LSLinuxVolumes**: AssetID, Type, SQLInstance, Credentials 
+**Get-LSLinuxVolumes**: AssetID, Type, SQLInstance, Credentials
+
+**Get-LSWindowsSoftware**: AssetID, AssetName, SQLInstance, Credentials
+
+**Get-LSMacSoftware**: AssetID, AssetName, SQLInstance, Credentials
 
 **Get-LSComputerObject**: AssetID, AssetName, SQLInstance, Credentials 
 
 
 # Tables Queried
+#### More information about tables and their content can be found in Lansweeper's database documentation
 | Function               | Table  Queried     | 
 | -----------------------|:------------------:| 
 | Get-LSAsset            | tblAssets          | 
@@ -147,6 +152,8 @@ https://www.top-password.com/blog/tag/manually-backup-bitlocker-recovery-key-to-
 | Get-LSLinuxSystem      | tblLinuxSystem     |
 | Get-LSDisks            | tblDiskDrives      |
 | Get-LSLinuxVolumes     | tblLinuxVolumes    |
+| Get-LSWindowsSoftware  | tblAssets, tblAssetCustom, tblSoftware, tblSoftwareUni, tsysOS |
+| Get-LSMacSoftware      | tblAssets, tblAssetCustom, tlbMacApplications, tblSoftwareUni, tblMacOsInfo |
 | Get-LSComputerObject   | tblAssets, tblAssetCustom, tblCPLogonInfo, tblNetwork, tblNetworkAdapter, tblEncryptableDisk, tblProxy     |
 
 
