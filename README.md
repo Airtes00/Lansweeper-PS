@@ -106,7 +106,7 @@ foreach ($Computer in $Assetlist){
 ```
 ![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
 
-## Bitlocker
+## Enable Bitlocker
 
 Below is an example script to check Bitlocker on the C: drive of our assets. The unencrypted assets are exported to a file to be troubleshot or to have Bitlocker enabled remotely. 
 
@@ -129,6 +129,30 @@ foreach ($asset in $list){
 After this, a GPO or the manage-bde tool can be used to save the new recovery keys to Active Directory.
 
 https://www.top-password.com/blog/tag/manually-backup-bitlocker-recovery-key-to-ad/
+
+## Perform A Disk Cleanup At >90% Disk Usage
+
+This scriptblock will import a list of computers and display the percentage of their fixed drives (drive type 3) that is in use.
+
+```Powershell
+$Assetlist = Get-Content .\computers.txt
+$SQLServer = "YourSQLServer"
+foreach ($asset in $Assetlist)
+{
+    $diskList = Get-LSDisks -AssetName $asset -SQLInstance $SQLServer
+    foreach ($disk in $diskList)
+        {
+            if ($disk.DriveType -eq 3 -and ($disk.Freespace / $disk.Size) -gt 0.90){
+                $usage = (($disk.Freespace / $disk.Size) * 100)
+                $usage = [math]::Round($usage,2)
+                Write-Host $asset $disk.Caption is at $usage% capacity
+            }
+        }
+}
+ 
+```
+
+While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our if statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device.
 
 # Function Parameters
 
