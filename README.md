@@ -92,6 +92,19 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 
 # Automation Examples
 
+## Add Computer Serial Numbers to Active Directory
+
+Another useful place to keep computers' serials is in Active Directory. With the proper permissions to AD, we can add the serial to each object's serialNumber atrribute.
+
+```Powershell
+$Assetlist = Get-Content .\computers.txt
+$SQLServer = "SVR3-SQL"
+foreach ($Computer in $Assetlist){
+    $LSSerialNumber = (Get-LSComputerObject -AssetName $computer -SQLInstance $SQLServer).DeviceSerial
+    Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber}
+}
+```
+
 ## Bitlocker
 
 Below is an example script to check Bitlocker on the C: drive of our assets. The unencrypted assets are exported to a file to be troubleshot or to have Bitlocker enabled remotely. 
@@ -108,8 +121,8 @@ foreach ($asset in $list){
  # To remotely enable BDE
  $ToBeEncrypted = Get-Content .\NoBDE.csv
  foreach ($computer in $ToBeEncrypted){
- manage-bde -on C: -cn $computer -rp
- Restart-Computer -ComputerName $computer
+    manage-bde -on C: -cn $computer -rp
+    Restart-Computer -ComputerName $computer
  }
  ```
 After this, a GPO or the manage-bde tool can be used to save the new recovery keys to Active Directory.
