@@ -152,7 +152,23 @@ foreach ($asset in $Assetlist)
  
 ```
 
-While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our ```if``` statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device.
+While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our ```if``` statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device. A scheduled task can also be created with schtasks.exe as demonstrated below.
+
+## Schedule A Restart at >30 Days Uptime
+
+**Get-LSAsset** provides an asset's uptime, and we use schtasks.exe to schedule a restart at 9:00pm. WinRM does not have to be enabled for this.
+
+```Powershell
+$Assetlist = Get-Content .\computers.txt
+$SQLServer = "YourSQLServer"
+foreach ($Computer in $Assetlist){
+    $AssetUpTime = ((Get-LSAsset -AssetName $Computer -SQLInstance $SQLServer).UpTime) / 86400
+    if ($AssetUpTime -gt 30){
+        Write-Host $computer uptime is at $AssetUpTime days
+        schtasks /Create /S $Computer /TN "Scheduled Restart" /TR "powershell.exe Restart-Computer" /SC once /ST 21:00
+    }
+}
+```
 
 # Function Parameters
 
