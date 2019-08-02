@@ -98,12 +98,13 @@ Another useful place to keep computers' serials is in Active Directory. With the
 
 ```Powershell
 $Assetlist = Get-Content .\computers.txt
-$SQLServer = "SVR3-SQL"
+$SQLServer = "YourSQLServer"
 foreach ($Computer in $Assetlist){
     $LSSerialNumber = (Get-LSComputerObject -AssetName $computer -SQLInstance $SQLServer).DeviceSerial
     Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber}
 }
 ```
+![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
 
 ## Bitlocker
 
