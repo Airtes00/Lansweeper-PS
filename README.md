@@ -152,7 +152,7 @@ foreach ($asset in $Assetlist)
  
 ```
 
-While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our if statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device.
+While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our ```if``` statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device.
 
 # Function Parameters
 
