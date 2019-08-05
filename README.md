@@ -184,7 +184,7 @@ foreach ($Computer in $Assetlist){
 
 **Get-LSADComputer**: AdcomputerID, AssetID, Comment, Company, Description, Location, OU, Lastchanged, LastScheduled, LastSaved, MAC, Memory, OSCode, Processor, SQLInstance, Scanserver, SP, Username, Userdomain 
 
-**Get-LSADUser**: AssetID, Accounttype, BuiltInAdmin, Disabled, Description, Fullname, Lockout, Name, PasswordChangeable, PasswordExpires, PasswordRequired, SID, Status, UserID, LastChanged, SQLInstance, Credentials
+**Get-LSUser**: AssetID, Accounttype, BuiltInAdmin, Disabled, Description, Fullname, Lockout, Name, PasswordChangeable, PasswordExpires, PasswordRequired, SID, Status, UserID, LastChanged, SQLInstance, Credentials
 
 **Get-LSLinuxSystem**: AssetID, Manufacturer, ProductName, Serial, UUID, NetworkNodtHostName, KernelName, KernelRelease, KernelVersion, MachineHardwareName, HardwarePlatform, OperatingSystem, OSRelease, SystemSku, SQLInstance, Credentials 
 
