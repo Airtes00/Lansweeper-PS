@@ -20,15 +20,27 @@ Install-Module Lansweeper-PS
 
 [Usage](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#usage)
 
-[Example 1 - Get-LSAsset](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-1)
+**Examples**
 
-[Example 2 - Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-2)
+[Get-LSAsset](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-1)
 
-[Example 3 - Get-LSAssetCustom + Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-3)
+[Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-2)
 
-[Example 4 - Get-LSDisks + Get-LSLinuxVolumes](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-4)
+[Get-LSAssetCustom + Get-LSComputerObject](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-3)
 
-[For Automation](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Automation-Examples)
+[Get-LSDisks + Get-LSLinuxVolumes](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#example-4)
+
+**Automation**
+
+[Adding Serials or Other Attributes to Active Directory](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#add-computer-serial-numbers-or-any-attributes-to-active-directory)
+
+[Remotely Enable BDE](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#remotely-enable-bitlocker)
+
+[Perform a Disk Cleanup](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#perform-a-disk-cleanup-at-90-disk-usage)
+
+[Schedule a Restart Based on Uptime](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#schedule-a-restart-at-30-days-uptime)
+
+[Disable Local Guest/Admin Accounts](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#disable-local-guest-or-administrator-accounts)
 
 [Parameters](https://github.com/marcus-dean/Lansweeper-PS/blob/master/README.md#Function-Parameters)
 
