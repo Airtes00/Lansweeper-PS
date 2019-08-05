@@ -174,6 +174,30 @@ foreach ($Computer in $Assetlist){
 }
 ```
 
+## Disable Local Guest or Administrator Accounts
+
+Using **Get-LSUser** to look at the local users on a machine (or list of machines), we can make sure we've disabled any Guest accounts on our Windows systems, built in admin accounts, or all local admin accounts. 
+
+*Note: The property BuildInAdmin is not a typo.*
+
+```Powershell
+$Assetlist = Get-Content .\computers.txt
+$SQLServer = "YourSQLServer"
+foreach ($computer in $Assetlist)
+{
+    $userList = Get-LSUser -AssetName $computer -SQLInstance $SQLServer
+    foreach ($account in $userList)
+        {
+            #For the if statement below, we can change from looking for admin accounts to Guest 
+            #accounts by changing $account.BuildInAdmin -eq $True to $account.Name -eq "Guest".
+            if ($account.BuildInAdmin -eq $True -and account.Disabled -eq $False{
+                Write-Host "Administrator account is currently enabled on $computer. Disabling..."
+                Invoke-Command -ComputerName $computer -ScriptBlock{Disable-LocalUser -Name "Administrator"} -Confirm
+            }
+        }
+}
+```
+
 # Function Parameters
 
 *Function parameters are based on the columns/data held in the specific table that they query. Most, but not all, of the columns have been made into parameters. Each function will accept 1 parameter besides Credentials and SQLInstance, this is purposeful to prevent returning many results as the result of a vague parameter. Functions can still return multiple results if the parameter entered (like Domain) would match with multiple assets.*
