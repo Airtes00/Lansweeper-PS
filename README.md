@@ -107,7 +107,7 @@ foreach ($Computer in $Assetlist){
     Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber, macAddress=$LSMac}
 }
 ```
-Note: Because object properties with multiple values are stored as an array (such as multiple MACs on a server with multiple NICs), and the **Set-ADComputer** cmdlet accepts a hashtable as input, properties with multiple values **will** translate into attributes with multiple values.
+*Note: Because object properties with multiple values are stored as an array (such as multiple MACs on a server with multiple NICs), and the **Set-ADComputer** cmdlet accepts a hashtable as input, properties with multiple values **will** translate into attributes with multiple values.* [More about hashtables.](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_hash_tables?view=powershell-6)
 ![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
 
 ## Remotely Enable Bitlocker
@@ -156,7 +156,7 @@ foreach ($asset in $Assetlist)
 }
 ```
 
-Note: WinRM would have to be enabled on the device. A scheduled task can also be created with schtasks.exe as demonstrated below.
+*Note: WinRM would have to be enabled on the device. A scheduled task can also be created with schtasks.exe as demonstrated below.*
 
 ## Schedule A Restart at >30 Days Uptime
 
