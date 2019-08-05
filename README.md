@@ -149,13 +149,13 @@ foreach ($asset in $Assetlist)
                 $usage = (($disk.Freespace / $disk.Size) * 100)
                 $usage = [math]::Round($usage,2)
                 Write-Host $asset $disk.Caption is at $usage% capacity
+                Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}
             }
         }
 }
- 
 ```
 
-While this script tells us how much is in use, we could just as easilly add ```Invoke-Command -ComputerName $asset -ScriptBlock{cleanmgr.exe /verylowdisk}``` to the end of our ```if``` statement to trigger a disk cleanup on that device. WinRM would have to be enabled on the device. A scheduled task can also be created with schtasks.exe as demonstrated below.
+Note: WinRM would have to be enabled on the device. A scheduled task can also be created with schtasks.exe as demonstrated below.
 
 ## Schedule A Restart at >30 Days Uptime
 
