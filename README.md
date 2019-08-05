@@ -109,7 +109,7 @@ foreach ($Computer in $Assetlist){
 ```
 ![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
 
-## Enable Bitlocker
+## Remotely Enable Bitlocker
 
 Below is an example script to check Bitlocker on the C: drive of our assets. The unencrypted assets are exported to a file to be troubleshot or to have Bitlocker enabled remotely. 
 
