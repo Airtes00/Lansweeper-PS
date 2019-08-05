@@ -107,6 +107,7 @@ foreach ($Computer in $Assetlist){
     Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber, macAddress=$LSMac}
 }
 ```
+Note: Because object properties with multiple values are stored as an array (such as multiple MACs on a server with multiple NICs), and the **Set-ADComputer** cmdlet accepts a hashtable as input, properties with multiple values **will** translate into attributes with multiple values.
 ![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
 
 ## Remotely Enable Bitlocker
