@@ -92,16 +92,19 @@ Get-LSDisks -AssetID $MyID -SQLInstance $Server
 
 # Automation Examples
 
-## Add Computer Serial Numbers to Active Directory
+## Add Computer Serial Numbers (or any attributes) to Active Directory
 
-Another useful place to keep computers' serials is in Active Directory. With the proper permissions to AD, we can add the serial to each object's serialNumber atrribute.
+Another useful place to keep computers' serials is in Active Directory. With the proper permissions to AD, we can add the serial to each object's serialNumber atrribute. 
+To update attributes all you need is the attribute name and a value to assign it. The below example will add the machine's serial and MAC to its AD object, but this can be expanded on as long as you know the attribute you are trying to edit. [Set-ADComputer](https://docs.microsoft.com/en-us/powershell/module/addsadministration/set-adcomputer?view=win10-ps) accepts a hashtable to modify objects, in the form of @{attributeName=value}. [List of all AD attributes.](https://docs.microsoft.com/en-us/windows/win32/adschema/attributes-all)
 
 ```Powershell
 $Assetlist = Get-Content .\computers.txt
 $SQLServer = "YourSQLServer"
 foreach ($Computer in $Assetlist){
-    $LSSerialNumber = (Get-LSComputerObject -AssetName $computer -SQLInstance $SQLServer).DeviceSerial
-    Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber}
+    $AssetQuery = et-LSComputerObject -AssetName $computer -SQLInstance $SQLServer
+    $LSSerialNumber = $AssetQuery.DeviceSerial
+    $LSMac = $AssetQuery.MAC
+    Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber, macAddress=$LSMac}
 }
 ```
 ![ADProperties](https://github.com/marcus-dean/Lansweeper-PS/blob/master/Examples/AD%20Properties%20Serial.PNG)
