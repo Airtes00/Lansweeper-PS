@@ -101,7 +101,7 @@ To update attributes all you need is the attribute name and a value to assign it
 $Assetlist = Get-Content .\computers.txt
 $SQLServer = "YourSQLServer"
 foreach ($Computer in $Assetlist){
-    $AssetQuery = et-LSComputerObject -AssetName $computer -SQLInstance $SQLServer
+    $AssetQuery = Get-LSComputerObject -AssetName $computer -SQLInstance $SQLServer
     $LSSerialNumber = $AssetQuery.DeviceSerial
     $LSMac = $AssetQuery.MAC
     Set-ADComputer -Identity $Computer -Add @{serialNumber=$LSSerialNumber, macAddress=$LSMac}
