@@ -1,7 +1,7 @@
 # Lansweeper-PS
 Provides functionality to load asset information in Powershell from the Lansweeper database.
 
-SQL queries are accomplished with dbatools to interact with the SQL server.
+SQL queries are accomplished using dbatools to interact with the SQL server. (Specifically Invoke-dbaquery)
 https://github.com/sqlcollaborative/dbatools
 
 [Check out my LinkedIn!](https://www.linkedin.com/in/marcus-dean/)
