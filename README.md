@@ -264,12 +264,10 @@ This tool has a few dependencies/pre-requisites that need to be met in order to 
 # To do
 -Add support for CompactSQL databases
 
-~~Integrate DbaQuery function into this module in order to remove dbatools as a dependency~~
+-~~Integrate DbaQuery function into this module in order to remove dbatools as a dependency~~
 
----->While this module's only dependency is invoke-dbaquery, that command depends on quite a few things within the dbatools module including the SMO libraries for working with SQL. 
+---While this module's only dependency is invoke-dbaquery, that command depends on quite a few things within the dbatools module including the SMO libraries for working with SQL. 
 
--Add more functions as the community dictates. Currently the main functions deal with computer assets and user accounts. Support can be added for AWS, Azure, Linux devices, Mac devices, and Networking devices with minimal effort.
-
--Add support for wildcards when using parameters to search for assets in the LS database. Powershell and SQL handle wildcards differently, and currently adding support for them would be lengthy with my current skillset.
+-Add more functions to handle a wider variety of assets, including cloud infrastructure and mobile devices.
 
 -Beautify code
