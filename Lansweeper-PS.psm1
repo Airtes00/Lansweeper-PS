@@ -3,14 +3,17 @@
 } 
 else {
     write-host "The module dbatools is not installed, but it is required to function. Please follow the prompts to install dbatools."
-    install-module dbatools
+    try{install-module dbatools}
+    catch{Write-Host "Failed to install the dbatools module! Are you able to connect to the PSGallery repository, or do you need to install from another location?"} break
     import-module dbatools
 }
+
 
 function EncryptableVolumeStatus($AssetObject, $AssetID)
 {
     $MyHash = [ordered]@{}
-    $DiskArray = Invoke-Command {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblEncryptableVolume WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SqlInstance "SVR3-SQL"}
+    try {$DiskArray = Invoke-Command {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblEncryptableVolume WHERE AssetID = @Variable" -SqlParameters @{Variable = $AssetID} -SqlInstance "SVR3-SQL"}}
+    catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
 
     foreach($Disk in $DiskArray)
     {
@@ -64,7 +67,8 @@ Get-Asset queries lansweeperdb.dbo.tblAssets for asset(s) matching the passed pa
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break #Allows only one parameter to be run without creating literally dozens of parameter sets
             }
        }
@@ -84,6 +88,7 @@ Get-AssetCustom queries lansweeperdb.dbo.tblAssetCustom for asset(s) matching th
         [parameter(Mandatory=$false)]$BranchOffice,
         [parameter(Mandatory=$false)]$Contact,
         [parameter(Mandatory=$false)]$CustID,
+        [parameter(Mandatory=$false)]$Credentials,
         [parameter(Mandatory=$false)]$DNSName,
         [parameter(Mandatory=$false)]$Department,
         [parameter(Mandatory=$false)]$DeviceVersion,
@@ -133,7 +138,8 @@ Get-AssetCustom queries lansweeperdb.dbo.tblAssetCustom for asset(s) matching th
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssetCustom WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssetCustom WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -154,6 +160,7 @@ Get-LSADComputer queries lansweeperdb.dbo.tblADComputer for asset(s) matching th
         [parameter(Mandatory=$false)]$AssetID,
         [parameter(Mandatory=$false)]$Comment,
         [parameter(Mandatory=$false)]$Company,
+        [parameter(Mandatory=$false)]$Credentials,
         [parameter(Mandatory=$false)]$Description,
         [parameter(Mandatory=$false)]$Location,
         [parameter(Mandatory=$false)]$OU,
@@ -176,7 +183,8 @@ Get-LSADComputer queries lansweeperdb.dbo.tblADComputer for asset(s) matching th
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblADComputers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblADComputers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -217,7 +225,8 @@ Get-LSUser queries lansweeperdb.dbo.tblUsers for asset(s) matching the passed pa
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblUsers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblUsers WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -237,9 +246,6 @@ function Get-LSComputerObject
         [parameter(Mandatory=$true) ]$SQLInstance,
         [parameter(Mandatory=$false)]$Credentials
         )
-
-        #Creates the empty hashtable where we will later store the status of encryptable volumes on our search result
-        $MyHash = [ordered]@{}
 
         foreach ($Parameter in $PSBoundParameters.keys) 
        {
@@ -297,7 +303,8 @@ function Get-LSLinuxSystem
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxSystem WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxSystem WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -324,15 +331,16 @@ function Get-LSDisks
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
             {
                 $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-
                 $MyAssetID = $AssetsTable.AssetID
-                Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE AssetID = @Variable" -SqlParameters @{Variable = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+                try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE AssetID = @Variable" -SqlParameters @{Variable = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+                catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
             }
 
             elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblDiskDrives WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -355,7 +363,8 @@ function Get-LSLinuxVolumes
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials")
             {
              $ComputerObject = $PSBoundParameters.item($Parameter)
-             Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxVolumes WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+             try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblLinuxVolumes WHERE $Parameter = @Variable" -SqlParameters @{Variable = $ComputerObject} -SQLCredential $Credentials -SqlInstance $SQLInstance}}
+             catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
              break
             }
        }
@@ -378,14 +387,15 @@ function Get-LSWindowsSoftware
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
             {
                 $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
-
                 $MyAssetID = $AssetsTable.AssetID
-                Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSWindowsSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, IPAddress, Software, Version
+                try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select-Object AssetName, IPAddress, Software, Version}
+                catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
             }
 
             elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
             {
-            Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSWindowsSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, IPAddress, Software, Version
+            try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select-Object AssetName, IPAddress, Software, Version}
+            catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
             }
        }
 }
@@ -406,15 +416,17 @@ function Get-LSMacSoftware
        {
             if ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetName")
             {
-                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "SELECT * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
+                $AssetsTable = Invoke-Command -ScriptBlock {Invoke-DbaQuery -Query "Select-Object * FROM lansweeperdb.dbo.tblAssets WHERE AssetName = @Variable" -SqlParameters @{Variable = $AssetName} -SQLCredential $Credentials -SqlInstance $SQLInstance}
 
                 $MyAssetID = $AssetsTable.AssetID
-                Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, Model, IPAddress, Software, Version
+                try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $MyAssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select-Object AssetName, Model, IPAddress, Software, Version}
+                catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
             }
 
             elseif ($Parameter -NotLike "SQLInstance" -And $Parameter -NotLike "Credentials" -And $Parameter -Like "AssetID")
             {
-            Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select AssetName, Model, IPAddress, Software, Version
+                try {Invoke-Command -ScriptBlock {Invoke-DbaQuery -File $PSScriptRoot\LSMacSoftwareQuery.txt -SqlParameters @{AssetID = $AssetID} -SQLCredential $Credentials -SqlInstance $SQLInstance} | Select-Object AssetName, Model, IPAddress, Software, Version}
+                catch {"Unable to invoke SQL query on remote server. Either the command did not recieve valid input, or dbatools threw an error."}
             }
        }
 }
