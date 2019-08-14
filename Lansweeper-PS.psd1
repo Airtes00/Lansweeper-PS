@@ -97,7 +97,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('Lansweeper', 'Automation', 'Reports', 'Windows', 'Powershell Core')
+        Tags = @('Lansweeper', 'Automation', 'Reports', 'Windows', 'Core')
 
         # A URL to the license for this module.
         LicenseUri = 'https://opensource.org/licenses/MIT'
