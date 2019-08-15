@@ -4,7 +4,7 @@ Provides functionality to load asset information in Powershell from the Lansweep
 SQL queries are accomplished using dbatools to interact with the SQL server. (Specifically Invoke-dbaquery)
 https://github.com/sqlcollaborative/dbatools
 
-[Check out my LinkedIn!](https://www.linkedin.com/in/marcus-dean/)
+If you'd like to become a contributor to this project, please email me at marcus.dean42@outlook.com and let me know what you're looking to add!
 
 # Install + Update
 Lansweeper-PS is published on the PSGallery (current version 1.30) and can be installed with **Install-Module Lansweeper-PS**
