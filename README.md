@@ -8,7 +8,8 @@ https://github.com/sqlcollaborative/dbatools
 
 # Install + Update
 Lansweeper-PS is published on the PSGallery (current version 1.30) and can be installed with **Install-Module Lansweeper-PS**
-https://www.powershellgallery.com/packages/Lansweeper-PS/
+
+[Lansweeper-PS on Powershell Gallery](https://www.powershellgallery.com/packages/Lansweeper-PS/)
 
 Module will be updated periodically for features and improvements. 
 
